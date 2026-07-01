@@ -35,7 +35,7 @@
 
 // ── plugin identity / menu layout (matches C# CommandMenuInit) ───────────────
 static const char *PLUGIN_NAME = "BracketsCheck";
-static const int nbFunc = 7;   // 0 All, 1 Selected, 2 separator, 3..6 toggles
+static const int nbFunc = 9;   // 0 All, 1 Selected, 2 sep, 3..6 toggles, 7 sep, 8 About
 
 // Menu command indices (mirror the C# SetCommand(index,…) calls)
 enum {
@@ -46,6 +46,8 @@ enum {
     CMD_SQUARE    = 4,
     CMD_CURLY     = 5,
     CMD_ANGLE     = 6,
+    CMD_SEP2      = 7,
+    CMD_ABOUT     = 8,
 };
 
 namespace {
@@ -302,6 +304,22 @@ void toggleCheckSquare() { gCheckSquare = !gCheckSquare; setMenuChecked(CMD_SQUA
 void toggleCheckCurly()  { gCheckCurly  = !gCheckCurly;  setMenuChecked(CMD_CURLY,  gCheckCurly);  }
 void toggleCheckAngle()  { gCheckAngle  = !gCheckAngle;  setMenuChecked(CMD_ANGLE,  gCheckAngle);  }
 
+// About — native NSAlert (macOS style).
+void cmdAbout() {
+    showAlert(@"Brackets Check",
+        @"Brackets Check for Notepad++ (macOS port)\n"
+        @"Version 1.0.0\n\n"
+        @"Checks whether brackets are balanced in the current document or selection.\n\n"
+        @"Features:\n"
+        @"- Checks round (), square [], curly {} and angle <> brackets\n"
+        @"- Check all text or just the selection\n"
+        @"- Per-type toggles, persisted across launches\n"
+        @"- Reports the row and character of the first unbalanced bracket\n\n"
+        @"Original Windows plugin by niccord (Unlicense)\n"
+        @"macOS port by Andrey Letov\n"
+        @"Project home: https://github.com/nextpad-plus-plus-plugins/BracketsCheck.macos");
+}
+
 } // namespace
 
 // ── plugin exports (the 5 required C symbols) ────────────────────────────────
@@ -339,6 +357,12 @@ extern "C" NPP_EXPORT void setInfo(NppData data) {
     strncpy(funcItem[CMD_ANGLE]._itemName,  "Check angle brackets",  NPP_MENU_ITEM_SIZE - 1);
     funcItem[CMD_ANGLE]._pFunc      = toggleCheckAngle;
     funcItem[CMD_ANGLE]._init2Check = gCheckAngle;
+
+    strncpy(funcItem[CMD_SEP2]._itemName, "---", NPP_MENU_ITEM_SIZE - 1);
+    funcItem[CMD_SEP2]._pFunc = nullptr;
+
+    strncpy(funcItem[CMD_ABOUT]._itemName, "About...", NPP_MENU_ITEM_SIZE - 1);
+    funcItem[CMD_ABOUT]._pFunc = cmdAbout;
 }
 
 extern "C" NPP_EXPORT const char *getName() { return PLUGIN_NAME; }
