@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(BracketsCheck VERSION 1.2.0 LANGUAGES CXX OBJCXX)
+project(BracketsCheck VERSION 1.0.0 LANGUAGES CXX OBJCXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_OBJCXX_STANDARD 17)
